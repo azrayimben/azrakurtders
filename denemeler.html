@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Denemeler | Azra'nın Ders Günlüğü</title>
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Georgia, "Times New Roman", serif;
+            color: #edf7ff;
+
+            background:
+                radial-gradient(circle at 10% 10%, rgba(82, 166, 255, .18), transparent 28%),
+                radial-gradient(circle at 90% 80%, rgba(49, 112, 205, .18), transparent 30%),
+                linear-gradient(135deg, #06152b, #092544, #082f59);
+
+            padding-bottom: 60px;
+        }
+
+        .container {
+            width: min(1100px, 94%);
+            margin: auto;
+            padding-top: 35px;
+        }
+
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #9dd7ff;
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 35px;
+            transition: .3s;
+        }
+
+        .back:hover {
+            color: white;
+            transform: translateX(-4px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .small-title {
+            color: #82c8ff;
+            font-size: 13px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: clamp(40px, 7vw, 68px);
+            font-weight: normal;
+
+            background: linear-gradient(
+                90deg,
+                #e5f7ff,
+                #75c5ff,
+                #ffffff
+            );
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            text-shadow: 0 0 30px rgba(82, 176, 255, .25);
+        }
+
+        .header p {
+            color: #a9cce8;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+
+        /* GİRİŞ */
+
+        #loginPanel {
+            max-width: 500px;
+            margin: 40px auto;
+            background: rgba(8, 38, 69, .78);
+            border: 1px solid rgba(119, 198, 255, .25);
+            border-radius: 25px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 50px rgba(0,0,0,.18);
+        }
+
+        #loginPanel h2 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: normal;
+            color: #d9f2ff;
+            margin-bottom: 25px;
+        }
+
+        #loginPanel p {
+            text-align: center;
+            color: #91b9d7;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .login-input {
+            margin-bottom: 15px;
+        }
+
+        .login-button {
+            width: 100%;
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+
+            background: linear-gradient(
+                135deg,
+                #318bd0,
+                #4da9ec
+            );
+
+            color: white;
+            font-family: inherit;
+            font-size: 17px;
+            cursor: pointer;
+
+            transition: .3s;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+        }
+
+        #loginMessage {
+            text-align: center;
+            margin-top: 15px;
+            color: #ffb6c1;
+            min-height: 20px;
+        }
+
+        #appContent {
+            display: none;
+        }
+
+        .logout-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .logout-button {
+            border: 1px solid rgba(117,196,255,.25);
+            background: rgba(10,43,76,.65);
+            color: #9dd7ff;
+            padding: 9px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        /* İSTATİSTİKLER */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .stat {
+            padding: 20px;
+            text-align: center;
+
+            background: rgba(13, 51, 88, .58);
+            border: 1px solid rgba(117, 196, 255, .25);
+            border-radius: 18px;
+
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 28px;
+            color: #91d2ff;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #91b6d3;
+            font-size: 13px;
+        }
+
+        /* SEKME */
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            border: 1px solid rgba(117, 196, 255, .3);
+            background: rgba(10, 43, 76, .65);
+            color: #a9cde8;
+
+            padding: 13px 45px;
+            border-radius: 30px;
+
+            font-family: inherit;
+            font-size: 16px;
+
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .tab:hover {
+            border-color: #6fc4ff;
+        }
+
+        .tab.active {
+            color: white;
+            background: rgba(67, 151, 218, .25);
+            border-color: #76caff;
+            box-shadow: 0 0 20px rgba(71, 167, 239, .15);
+        }
+
+        /* FORM */
+
+        .panel {
+            background: rgba(8, 38, 69, .72);
+            border: 1px solid rgba(119, 198, 255, .25);
+
+            border-radius: 25px;
+            padding: 30px;
+
+            backdrop-filter: blur(12px);
+            margin-bottom: 40px;
+
+            box-shadow: 0 20px 50px rgba(0,0,0,.18);
+        }
+
+        .panel-title {
+            font-size: 25px;
+            font-weight: normal;
+            color: #d9f2ff;
+            margin-bottom: 25px;
+        }
+
+        .top-inputs {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            color: #91b9d7;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 15px;
+
+            border-radius: 12px;
+            border: 1px solid rgba(121, 195, 248, .25);
+
+            background: rgba(2, 20, 39, .55);
+            color: white;
+
+            outline: none;
+            font-family: inherit;
+            font-size: 15px;
+
+            transition: .3s;
+        }
+
+        input:focus {
+            border-color: #6fc5ff;
+            box-shadow: 0 0 15px rgba(74, 172, 239, .12);
+        }
+
+        .subjects {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .subject {
+            padding: 20px;
+
+            background: rgba(6, 28, 52, .6);
+            border: 1px solid rgba(112, 190, 245, .18);
+
+            border-radius: 17px;
+        }
+
+        .subject-name {
+            color: #d7efff;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .subject-inputs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .subject input {
+            text-align: center;
+        }
+
+        .net-preview {
+            margin-top: 12px;
+            text-align: right;
+
+            color: #76c9ff;
+            font-size: 13px;
+        }
+
+        .save-button {
+            width: 100%;
+            margin-top: 25px;
+
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+
+            background: linear-gradient(
+                135deg,
+                #318bd0,
+                #4da9ec
+            );
+
+            color: white;
+            font-family: inherit;
+            font-size: 17px;
+
+            cursor: pointer;
+
+            box-shadow: 0 8px 25px rgba(37, 128, 203, .25);
+
+            transition: .3s;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* KAYITLAR */
+
+        .records-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .records-title h2 {
+            font-size: 27px;
+            font-weight: normal;
+        }
+
+        .record-count {
+            color: #76c6fa;
+            font-size: 14px;
+        }
+
+        .record {
+            position: relative;
+
+            padding: 25px;
+            margin-bottom: 15px;
+
+            background: rgba(9, 43, 77, .65);
+            border: 1px solid rgba(113, 193, 249, .2);
+
+            border-radius: 20px;
+
+            transition: .3s;
+        }
+
+        .record:hover {
+            border-color: rgba(113, 200, 255, .45);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .record-name {
+            font-size: 21px;
+            color: #e2f5ff;
+        }
+
+        .record-date {
+            color: #82b4d5;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .record-type {
+            display: inline-block;
+
+            padding: 6px 12px;
+            border-radius: 20px;
+
+            background: rgba(69, 157, 222, .15);
+            border: 1px solid rgba(103, 191, 247, .25);
+
+            color: #8dd0ff;
+            font-size: 12px;
+        }
+
+        .record-total {
+            text-align: right;
+        }
+
+        .total-number {
+            display: block;
+            font-size: 29px;
+            color: #82ceff;
+        }
+
+        .total-label {
+            color: #779dbb;
+            font-size: 11px;
+        }
+
+        .record-subjects {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mini-subject {
+            padding: 12px 8px;
+            text-align: center;
+            background: rgba(2, 21, 40, .4);
+            border-radius: 12px;
+        }
+
+        .mini-name {
+            display: block;
+            color: #83a8c3;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .mini-net {
+            color: #d6f1ff;
+            font-size: 16px;
+        }
+
+        .delete-button {
+            border: 1px solid rgba(255, 120, 140, .25);
+            background: rgba(255, 80, 110, .07);
+
+            color: #e9a5b2;
+
+            padding: 9px 15px;
+            border-radius: 10px;
+
+            cursor: pointer;
+            font-family: inherit;
+
+            transition: .3s;
+        }
+
+        .delete-button:hover {
+            background: rgba(255, 80, 110, .15);
+            border-color: rgba(255, 120, 140, .5);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+
+            color: #7096b3;
+
+            background: rgba(7, 34, 62, .45);
+            border: 1px dashed rgba(108, 180, 235, .2);
+            border-radius: 20px;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .empty p {
+            line-height: 1.6;
+        }
+
+        @media (max-width: 700px) {
+
+            .container {
+                padding-top: 25px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                width: 100%;
+            }
+
+            .tab {
+                flex: 1;
+                padding: 12px 10px;
+            }
+
+            .top-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .subjects {
+                grid-template-columns: 1fr;
+            }
+
+            .record-subjects {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .record-header {
+                flex-direction: column;
+            }
+
+            .record-total {
+                text-align: left;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <a href="index.html" class="back">
+        ← Ana Sayfaya Dön
+    </a>
+
+    <!-- GİRİŞ EKRANI -->
+
+    <div id="loginPanel">
+
+        <h2>🔐 Azra'nın Çalışma Alanı</h2>
+
+        <p>
+            Denemelerini kaydetmek için giriş yap.
+        </p>
+
+        <div class="login-input">
+            <label>E-posta</label>
+            <input
+                type="email"
+                id="email"
+                placeholder="E-posta adresin"
+            >
+        </div>
+
+        <div class="login-input">
+            <label>Şifre</label>
+            <input
+                type="password"
+                id="password"
+                placeholder="Şifren"
+            >
+        </div>
+
+        <button
+            class="login-button"
+            onclick="login()"
+        >
+            Giriş Yap ✦
+        </button>
+
+        <div id="loginMessage"></div>
+
+    </div>
+
+
+    <!-- ASIL UYGULAMA -->
+
+    <div id="appContent">
+
+        <div class="logout-area">
+
+            <button
+                class="logout-button"
+                onclick="logout()"
+            >
+                Çıkış Yap
+            </button>
+
+        </div>
+
+
+        <header class="header">
+
+            <div class="small-title">
+                ✦ Azra's Study Journal ✦
+            </div>
+
+            <h1>Denemeler</h1>
+
+            <p>
+                Denemelerini kaydet, netlerini takip et ve
+                gelişimini zaman içinde gör.
+            </p>
+
+        </header>
+
+
+        <!-- İSTATİSTİKLER -->
+
+        <section class="stats">
+
+            <div class="stat">
+                <span
+                    class="stat-number"
+                    id="totalExams"
+                >
+                    0
+                </span>
+
+                <span class="stat-label">
+                    Toplam Deneme
+                </span>
+            </div>
+
+            <div class="stat">
+                <span
+                    class="stat-number"
+                    id="bestTYT"
+                >
+                    —
+                </span>
+
+                <span class="stat-label">
+                    En Yüksek TYT
+                </span>
+            </div>
+
+            <div class="stat">
+                <span
+                    class="stat-number"
+                    id="bestAYT"
+                >
+                    —
+                </span>
+
+                <span class="stat-label">
+                    En Yüksek AYT
+                </span>
+            </div>
+
+        </section>
+
+
+        <!-- TYT / AYT -->
+
+        <div class="tabs">
+
+            <button
+                class="tab active"
+                onclick="changeExamType('TYT')"
+            >
+                TYT
+            </button>
+
+            <button
+                class="tab"
+                onclick="changeExamType('AYT')"
+            >
+                AYT Sayısal
+            </button>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <section class="panel">
+
+            <h2
+                class="panel-title"
+                id="formTitle"
+            >
+                Yeni TYT Denemesi
+            </h2>
+
+
+            <div class="top-inputs">
+
+                <div>
+
+                    <label>Deneme Adı</label>
+
+                    <input
+                        type="text"
+                        id="examName"
+                        placeholder="Örn. 345 TYT Denemesi 4"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label>Tarih</label>
+
+                    <input
+                        type="date"
+                        id="examDate"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="subjects"
+                id="subjectsContainer"
+            >
+            </div>
+
+
+            <button
+                class="save-button"
+                onclick="saveExam()"
+            >
+                ✦ Denemeyi Kaydet
+            </button>
+
+        </section>
+
+
+        <!-- KAYITLAR -->
+
+        <section>
+
+            <div class="records-title">
+
+                <h2>Kayıtlı Denemeler</h2>
+
+                <span
+                    class="record-count"
+                    id="recordCount"
+                >
+                    0 kayıt
+                </span>
+
+            </div>
+
+            <div id="recordsContainer"></div>
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =====================================
+       SUPABASE AYARLARI
+    ===================================== */
+
+    const SUPABASE_URL =
+        "https://rrgyndmawsexhbsidfeo.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_qx-1gMYpWB-st30phQT6xw_iwrksiNM";
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    /* =====================================
+       AYARLAR
+    ===================================== */
+
+    let currentType = "TYT";
+
+    let exams = [];
+
+    const subjects = {
+
+        TYT: [
+            "Türkçe",
+            "Matematik",
+            "Sosyal Bilimler",
+            "Fen Bilimleri"
+        ],
+
+        AYT: [
+            "Matematik",
+            "Fizik",
+            "Kimya",
+            "Biyoloji"
+        ]
+
+    };
+
+
+    /* =====================================
+       TARİH
+    ===================================== */
+
+    document.getElementById("examDate").value =
+        new Date().toISOString().split("T")[0];
+
+
+    /* =====================================
+       GİRİŞ
+    ===================================== */
+
+    async function login() {
+
+        const email =
+            document.getElementById("email").value

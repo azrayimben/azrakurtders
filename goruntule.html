@@ -47,11 +47,13 @@
             padding-bottom: 60px;
         }
 
+
         .container {
             width: min(1100px, 94%);
             margin: auto;
             padding-top: 35px;
         }
+
 
         /* =====================================
            HEADER
@@ -91,6 +93,7 @@
             margin-top: 15px;
             line-height: 1.6;
         }
+
 
         /* =====================================
            HAFTALIK ÖZET
@@ -177,36 +180,6 @@
             font-size: 12px;
         }
 
-        /* =====================================
-           SECTIONS
-        ===================================== */
-
-        .section {
-            background:
-                rgba(8,38,69,.72);
-
-            border:
-                1px solid
-                rgba(119,198,255,.25);
-
-            border-radius: 25px;
-
-            padding: 25px;
-
-            margin-bottom: 30px;
-
-            backdrop-filter: blur(12px);
-        }
-
-        .section h2 {
-            font-size: 27px;
-
-            font-weight: normal;
-
-            color: #d9f2ff;
-
-            margin-bottom: 20px;
-        }
 
         /* =====================================
            STATS
@@ -253,6 +226,39 @@
 
             font-size: 13px;
         }
+
+
+        /* =====================================
+           SECTION
+        ===================================== */
+
+        .section {
+            background:
+                rgba(8,38,69,.72);
+
+            border:
+                1px solid
+                rgba(119,198,255,.25);
+
+            border-radius: 25px;
+
+            padding: 25px;
+
+            margin-bottom: 30px;
+
+            backdrop-filter: blur(12px);
+        }
+
+        .section h2 {
+            font-size: 27px;
+
+            font-weight: normal;
+
+            color: #d9f2ff;
+
+            margin-bottom: 20px;
+        }
+
 
         /* =====================================
            DENEMELER
@@ -370,6 +376,7 @@
             font-size: 16px;
         }
 
+
         /* =====================================
            SORU GÜNÜ
         ===================================== */
@@ -389,6 +396,9 @@
             border-radius: 20px;
         }
 
+
+        /* TARİH */
+
         .question-day-header {
             display: flex;
 
@@ -396,7 +406,9 @@
 
             align-items: center;
 
-            margin-bottom: 15px;
+            gap: 15px;
+
+            margin-bottom: 17px;
         }
 
         .question-date {
@@ -405,42 +417,25 @@
             font-size: 19px;
         }
 
+        .question-day-name {
+            color: #82c8ff;
+
+            font-size: 14px;
+
+            margin-left: 6px;
+        }
+
         .question-total {
             color: #82ceff;
 
             font-size: 18px;
+
+            white-space: nowrap;
         }
 
-        .question-list {
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 10px;
-        }
-
-        .question-item {
-            padding: 13px;
-
-            background:
-                rgba(2,21,40,.4);
-
-            border-radius: 12px;
-
-            display: flex;
-
-            justify-content: space-between;
-
-            color: #a9cce8;
-        }
-
-        .question-count {
-            color: #82ceff;
-        }
 
         /* =====================================
-           GÜNLÜK NOT
+           NOT
         ===================================== */
 
         .note-box {
@@ -480,8 +475,42 @@
             overflow-wrap: anywhere;
         }
 
+
         /* =====================================
-           BOŞ / YÜKLENİYOR
+           SORULAR
+        ===================================== */
+
+        .question-list {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 10px;
+        }
+
+        .question-item {
+            padding: 13px;
+
+            background:
+                rgba(2,21,40,.4);
+
+            border-radius: 12px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #a9cce8;
+        }
+
+        .question-count {
+            color: #82ceff;
+        }
+
+
+        /* =====================================
+           BOŞ / LOADING
         ===================================== */
 
         .empty {
@@ -501,6 +530,7 @@
 
             font-size: 18px;
         }
+
 
         /* =====================================
            YENİLE
@@ -534,6 +564,7 @@
 
             color: white;
         }
+
 
         /* =====================================
            MOBİL
@@ -570,6 +601,10 @@
                 grid-template-columns: 1fr;
             }
 
+            .question-day-header {
+                align-items: flex-start;
+            }
+
             .section {
                 padding: 20px;
             }
@@ -586,7 +621,7 @@
 
 
     <!-- =====================================
-         BAŞLIK
+         HEADER
     ===================================== -->
 
     <header class="header">
@@ -607,7 +642,7 @@
 
 
     <!-- =====================================
-         YÜKLENİYOR
+         LOADING
     ===================================== -->
 
     <div
@@ -834,7 +869,7 @@ function escapeHTML(text) {
 
 
 /* ============================================
-   TARİHİ YYYY-MM-DD'E ÇEVİR
+   TARİH → YYYY-MM-DD
 ============================================ */
 
 function formatDateForDatabase(date) {
@@ -858,7 +893,7 @@ function formatDateForDatabase(date) {
 
 
 /* ============================================
-   HAFTANIN PAZARTESİ
+   PAZARTESİYİ BUL
 ============================================ */
 
 function getMonday(date) {
@@ -876,12 +911,6 @@ function getMonday(date) {
     const day =
         result.getDay();
 
-    /*
-        JavaScript:
-        Pazar = 0
-        Pazartesi = 1
-    */
-
     const difference =
         day === 0
             ? -6
@@ -897,7 +926,7 @@ function getMonday(date) {
 
 
 /* ============================================
-   TARİH GÖSTERİMİ
+   KISA TARİH
 ============================================ */
 
 function formatShortDate(date) {
@@ -914,7 +943,7 @@ function formatShortDate(date) {
 
 
 /* ============================================
-   HAFTALIK SORU HESABI
+   HAFTALIK ÖZET
 ============================================ */
 
 function renderWeeklySummary(entries) {
@@ -922,10 +951,6 @@ function renderWeeklySummary(entries) {
     const today =
         new Date();
 
-
-    /* ========================================
-       BU HAFTA
-    ======================================== */
 
     const thisMonday =
         getMonday(today);
@@ -941,10 +966,6 @@ function renderWeeklySummary(entries) {
     );
 
 
-    /* ========================================
-       GEÇEN HAFTA
-    ======================================== */
-
     const lastMonday =
         new Date(
             thisMonday
@@ -954,10 +975,6 @@ function renderWeeklySummary(entries) {
         lastMonday.getDate() - 7
     );
 
-
-    /* ========================================
-       HAFTA TARİHLERİNİ STRING YAP
-    ======================================== */
 
     const thisMondayString =
         formatDateForDatabase(
@@ -977,10 +994,6 @@ function renderWeeklySummary(entries) {
         );
 
 
-    /* ========================================
-       TOPLAMLAR
-    ======================================== */
-
     let thisWeekTotal = 0;
 
     let lastWeekTotal = 0;
@@ -991,17 +1004,11 @@ function renderWeeklySummary(entries) {
         const date =
             entry.date;
 
-
         const count =
             Number(
                 entry.question_count
             ) || 0;
 
-
-        /*
-            Bu hafta:
-            Pazartesi <= tarih < sonraki Pazartesi
-        */
 
         if (
             date >= thisMondayString &&
@@ -1012,11 +1019,6 @@ function renderWeeklySummary(entries) {
 
         }
 
-
-        /*
-            Geçen hafta:
-            Geçen Pazartesi <= tarih < bu Pazartesi
-        */
 
         if (
             date >= lastMondayString &&
@@ -1029,10 +1031,6 @@ function renderWeeklySummary(entries) {
 
     });
 
-
-    /* ========================================
-       EKRANA YAZ
-    ======================================== */
 
     document.getElementById(
         "thisWeekQuestions"
@@ -1049,10 +1047,6 @@ function renderWeeklySummary(entries) {
             "tr-TR"
         );
 
-
-    /* ========================================
-       TARİH ARALIKLARI
-    ======================================== */
 
     const thisSunday =
         new Date(
@@ -1461,17 +1455,13 @@ function renderExams(exams) {
                     <div class="mini-subject">
 
                         <span class="mini-name">
-
                             ${escapeHTML(
                                 subject.name
                             )}
-
                         </span>
 
                         <span class="mini-net">
-
                             ${subject.net.toFixed(2)}
-
                         </span>
 
                     </div>
@@ -1530,7 +1520,6 @@ function renderExams(exams) {
 
                 </div>
 
-
                 <div class="record-subjects">
 
                     ${subjectHTML}
@@ -1547,7 +1536,7 @@ function renderExams(exams) {
 
 
 /* ============================================
-   SORULARI VE NOTLARI GÖSTER
+   SORULAR + NOTLAR
 ============================================ */
 
 function renderQuestions(
@@ -1564,6 +1553,10 @@ function renderQuestions(
     container.innerHTML = "";
 
 
+    /* ========================================
+       NOTLARI TARİHE GÖRE EŞLEŞTİR
+    ======================================== */
+
     const notesByDate = {};
 
 
@@ -1574,6 +1567,10 @@ function renderQuestions(
 
     });
 
+
+    /* ========================================
+       GÜNLER
+    ======================================== */
 
     const days = {};
 
@@ -1590,6 +1587,10 @@ function renderQuestions(
 
     });
 
+
+    /* ========================================
+       SADECE NOTU OLAN GÜNLER
+    ======================================== */
 
     notes.forEach(note => {
 
@@ -1623,10 +1624,15 @@ function renderQuestions(
     }
 
 
+    /* ========================================
+       TARİHLER
+    ======================================== */
+
     dates
         .sort()
         .reverse()
         .forEach(date => {
+
 
             const dayEntries =
                 days[date];
@@ -1647,19 +1653,41 @@ function renderQuestions(
                 );
 
 
-            const formattedDate =
+            const dateObject =
                 new Date(
                     date + "T00:00:00"
-                )
-                .toLocaleDateString(
-                    "tr-TR",
-                    {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric"
-                    }
                 );
 
+
+            const formattedDate =
+                dateObject
+                    .toLocaleDateString(
+                        "tr-TR",
+                        {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric"
+                        }
+                    );
+
+
+            /* =================================
+               GÜN ADI
+            ================================= */
+
+            const dayName =
+                dateObject
+                    .toLocaleDateString(
+                        "tr-TR",
+                        {
+                            weekday: "long"
+                        }
+                    );
+
+
+            /* =================================
+               NOT
+            ================================= */
 
             let noteHTML = "";
 
@@ -1674,7 +1702,9 @@ function renderQuestions(
                     <div class="note-box">
 
                         <div class="note-title">
+
                             📝 GÜNÜN NOTU
+
                         </div>
 
                         <div class="note-text">
@@ -1691,6 +1721,10 @@ function renderQuestions(
 
             }
 
+
+            /* =================================
+               SORULAR
+            ================================= */
 
             let itemsHTML = "";
 
@@ -1737,18 +1771,6 @@ function renderQuestions(
 
                 questionHTML = `
 
-                    <div class="question-day-header">
-
-                        <span class="question-date">
-                            ${formattedDate}
-                        </span>
-
-                        <span class="question-total">
-                            ${total} soru
-                        </span>
-
-                    </div>
-
                     <div class="question-list">
 
                         ${itemsHTML}
@@ -1759,30 +1781,62 @@ function renderQuestions(
 
             }
 
-            else {
 
-                questionHTML = `
+            /* =================================
+               GÜN KARTI
 
-                    <div class="question-day-header">
+               SIRALAMA:
 
-                        <span class="question-date">
-                            ${formattedDate}
-                        </span>
-
-                    </div>
-
-                `;
-
-            }
-
+               1. TARİH
+               2. NOT
+               3. SORULAR
+            ================================= */
 
             container.innerHTML += `
 
                 <div class="question-day">
 
+
+                    <div class="question-day-header">
+
+                        <span class="question-date">
+
+                            ${formattedDate}
+
+                            <span class="question-day-name">
+
+                                · ${dayName}
+
+                            </span>
+
+                        </span>
+
+
+                        ${
+                            dayEntries.length > 0
+
+                            ? `
+
+                                <span class="question-total">
+
+                                    ${total} soru
+
+                                </span>
+
+                            `
+
+                            : ""
+
+                        }
+
+                    </div>
+
+
                     ${noteHTML}
 
+
                     ${questionHTML}
+
 
                 </div>
 
@@ -1823,18 +1877,18 @@ async function loadEverything() {
             await loadNotes();
 
 
-        /* =================================
+        /* ==============================
            HAFTALIK ÖZET
-        ================================= */
+        ============================== */
 
         renderWeeklySummary(
             questions
         );
 
 
-        /* =================================
-           DENEME SAYISI
-        ================================= */
+        /* ==============================
+           TOPLAM DENEME
+        ============================== */
 
         document.getElementById(
             "totalExams"
@@ -1842,9 +1896,9 @@ async function loadEverything() {
             exams.length;
 
 
-        /* =================================
+        /* ==============================
            EN YÜKSEK TYT
-        ================================= */
+        ============================== */
 
         const tytExams =
             exams
@@ -1891,9 +1945,9 @@ async function loadEverything() {
         }
 
 
-        /* =================================
+        /* ==============================
            TOPLAM SORU
-        ================================= */
+        ============================== */
 
         const totalQuestions =
             questions.reduce(
@@ -1916,9 +1970,9 @@ async function loadEverything() {
             totalQuestions;
 
 
-        /* =================================
-           EKRANA BAS
-        ================================= */
+        /* ==============================
+           GÖSTER
+        ============================== */
 
         renderExams(
             exams
@@ -1930,10 +1984,6 @@ async function loadEverything() {
             notes
         );
 
-
-        /* =================================
-           GÖSTER
-        ================================= */
 
         document.getElementById(
             "loading"
